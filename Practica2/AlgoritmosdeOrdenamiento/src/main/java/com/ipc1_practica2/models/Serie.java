@@ -4,78 +4,28 @@ package com.ipc1_practica2.models;
  */
 public class Serie {
     private int[] numbers = new int[100];
-    private int algoritm;
-    private boolean order;
+    private int t_algoritm;
+    private boolean t_order;
     private int speed;
-    private int comparison;
-    private int exchange;
-    private int iteration;
+    private int n_comparison;
+    private int n_exchange;
+    private int n_iteration;
 
     public Serie() {
     }
 
-    public Serie(int algoritm, boolean order, int speed, int comparison, int exchange, int iteration) {
-        this.algoritm = algoritm;
-        this.order = order;
-        this.speed = speed;
-        this.comparison = comparison;
-        this.exchange = exchange;
-        this.iteration = iteration;
-    }
-
-    public int[] getNumbers() {
-        return numbers;
-    }
-
-    public void setNumbers(int[] numbers) {
+    public Serie(int[] numbers, int t_algoritm, boolean t_order, int speed, int n_comparison, int n_exchange, int n_iteration) {
         this.numbers = numbers;
-    }
-
-    public int getAlgoritm() {
-        return algoritm;
-    }
-
-    public void setAlgoritm(int algoritm) {
-        this.algoritm = algoritm;
-    }
-
-    public boolean isOrder() {
-        return order;
-    }
-
-    public void setOrder(boolean order) {
-        this.order = order;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
+        this.t_algoritm = t_algoritm;
+        this.t_order = t_order;
         this.speed = speed;
+        this.n_comparison = n_comparison;
+        this.n_exchange = n_exchange;
+        this.n_iteration = n_iteration;
     }
+    
+    
+    
+    
 
-    public int getComparison() {
-        return comparison;
-    }
-
-    public void setComparison(int comparison) {
-        this.comparison = comparison;
-    }
-
-    public int getExchange() {
-        return exchange;
-    }
-
-    public void setExchange(int exchange) {
-        this.exchange = exchange;
-    }
-
-    public int getIteration() {
-        return iteration;
-    }
-
-    public void setIteration(int iteration) {
-        this.iteration = iteration;
-    }
 }
