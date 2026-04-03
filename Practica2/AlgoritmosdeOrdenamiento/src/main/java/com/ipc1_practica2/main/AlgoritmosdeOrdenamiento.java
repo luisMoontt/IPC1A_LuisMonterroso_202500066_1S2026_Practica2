@@ -1,4 +1,6 @@
 package com.ipc1_practica2.main;
+import com.ipc1_practica2.views.StartFrame;
+import javax.swing.SwingUtilities;
 
 /**
  * @author Admin
@@ -6,6 +8,10 @@ package com.ipc1_practica2.main;
 public class AlgoritmosdeOrdenamiento {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        SwingUtilities.invokeLater(() -> {
+            StartFrame startFrame = new StartFrame();
+            startFrame.setVisible(true);
+            
+        });
     }
 }
