@@ -11,6 +11,8 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import java.awt.Color;
+import java.io.File;
+import javax.swing.JOptionPane;
 
 /**
  * @author Admin
@@ -40,8 +42,8 @@ public class SerieController {
             case 1 :
                 bubbleSort();
                 long end = System.currentTimeMillis();
-                v_mainModule.loadText(" ");
-                v_mainModule.loadText(" | Tiempo total de ejecucion: "+(end-start)+" ms. | ");
+                v_mainModule.loadTextArea(" ");
+                v_mainModule.loadTextArea(" | Tiempo total de ejecucion: "+(end-start)+" ms. | ");
                 break;
             case 2 :
                 
@@ -51,18 +53,63 @@ public class SerieController {
                 break;
         }
     }
+    
+    public String extractText(File textFile){
+        StringBuilder content = new StringBuilder();
+        
+        try {
+            java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(textFile));
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                content.append(linea);
+            }
+            reader.close();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+
+        String text = content.toString().trim();
+
+        if (text.matches("\\d+(,\\s*\\d+)*")) {
+            return text;
+        } else {
+            JOptionPane.showMessageDialog(null, "El archivo no tiene el formato correcto");
+            return null;
+        }
+    }
+    public String generateNumbers(int n){
+        java.util.Random random = new java.util.Random();
+        boolean[] used = new boolean[101];
+        
+        StringBuilder text = new StringBuilder();
+        int count = 0;
+
+        while (count < n) {
+            int num = random.nextInt(101);
+
+            if (!used[num]) {
+                used[num] = true;
+                text.append(num);
+                if (count < n - 1) {
+                    text.append(",");
+                }
+                count++;
+            }
+        }
+        return text.toString();
+    }
     // ALGORTMOS
     public void bubbleSort() throws InterruptedException{
         int[] numbers = serie.getNumbers();
         int n = numbers.length;
         if(serie.isT_order()){
-            v_mainModule.loadText(" INICIANDO BUBBLE SORT (ASCENDENTE)");
+            v_mainModule.loadTextArea(" INICIANDO BUBBLE SORT (ASCENDENTE)");
         } else {
-            v_mainModule.loadText(" INICIANDO BUBBLE SORT (DESCENDENTE)");
+            v_mainModule.loadTextArea(" INICIANDO BUBBLE SORT (DESCENDENTE)");
         }
         
         for (int i = 0; i < (n-1); i++) {
-            v_mainModule.loadText(" -- Iteracion "+(i+1)+" --");
+            v_mainModule.loadTextArea(" -- Iteracion "+(i+1)+" --");
             serie.setN_iteration(serie.getN_iteration() + 1);
 
             for (int j = 0; j < (n-i-1); j++) {
@@ -79,7 +126,7 @@ public class SerieController {
                     numbers[j + 1] = temp;
                     
                     serie.setN_exchange(serie.getN_exchange() + 1);
-                    v_mainModule.loadText(" Intercambiando "+numbers[j]+" y "+numbers[j+1]+". ");
+                    v_mainModule.loadTextArea(" Intercambiando "+numbers[j]+" y "+numbers[j+1]+". ");
                     
                     updateGraph(serie.getNumbers().clone(), j, j+1,2);
                     Thread.sleep(serie.getSpeed());

@@ -6,6 +6,8 @@ package com.ipc1_practica2.views;
 
 import org.jfree.chart.ChartPanel;
 import com.ipc1_practica2.controllers.SerieController;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,10 +23,11 @@ public class MainModule extends javax.swing.JFrame {
      */
     public MainModule() {
         initComponents();
-        c_serie = new SerieController(this);
-        initComponents();
-        setResizable(false);
+        jTextArea1.setEditable(false);
         jButton1.setFocusPainted(false);
+        
+        c_serie = new SerieController(this);
+        setResizable(false);
     }
 
     /**
@@ -100,6 +103,7 @@ public class MainModule extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jButton3.setText("Aleatorio");
+        jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jButton2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jButton2.setText("Cargar");
@@ -347,6 +351,7 @@ public class MainModule extends javax.swing.JFrame {
         jTextArea1.setColumns(20);
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
         jTextArea1.setRows(5);
+        jTextArea1.setBorder(null);
         jScrollPane2.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -463,11 +468,19 @@ public class MainModule extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        fc.showOpenDialog(fc);
+        String extension = fc.getSelectedFile().getName().substring(fc.getSelectedFile().getName().lastIndexOf("."));
+        if (extension.equals(".txt")){
+            loadText(c_serie.extractText(fc.getSelectedFile()));
+        } else {
+           JOptionPane.showMessageDialog(this, "Solo se permiten archivos .txt");
+        };
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        int[] data = {104, 34, 25, 12, 22, 11, 90, 45, 8, 9};
+        int[] data = {90, 34, 25, 1, 22, 11, 90, 45, 8, 9};
         new Thread(() -> {
             try {
                 c_serie.loadSerie(/*numbers*/ data, 1, true, 500);
@@ -486,6 +499,10 @@ public class MainModule extends javax.swing.JFrame {
         }).start();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        new NumberRange(this).setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     public void loadGraph(int[] data, int n1, int n2, int action){
         ChartPanel graph = c_serie.calculateGraph(data, n1, n2, action);
         graph.setBounds(0, 0, 646, 220);
@@ -495,9 +512,19 @@ public class MainModule extends javax.swing.JFrame {
         jPanel4.revalidate();
         jPanel4.repaint(); 
     }
-    public void loadText(String log){
+    public void loadTextArea(String log){
         jTextArea1.append(log + "\n");
         jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+    }
+    public void randomText(int n){
+        String text = c_serie.generateNumbers(n);
+        System.out.println(text);
+        loadText(text);
+    }
+    
+    
+    public void loadText(String text){
+        jTextField1.setText(text);
     }
     
     public static void main(String args[]) {
