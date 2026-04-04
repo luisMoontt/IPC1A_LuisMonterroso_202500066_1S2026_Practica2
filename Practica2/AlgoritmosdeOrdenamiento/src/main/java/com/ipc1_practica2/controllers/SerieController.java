@@ -26,9 +26,9 @@ public class SerieController {
         this.v_mainModule = v_mainModule;
     }
     
-    public void loadSerie(int[] numbers, int t_algoritm, boolean t_order, int speed) {
+    public void loadSerie(int[] numbers, int t_algorithm, boolean t_order, int speed) {
         serie.setNumbers(numbers.clone());
-        serie.setT_algoritm(t_algoritm);
+        serie.setT_algorithm(t_algorithm);
         serie.setT_order(t_order);
         serie.setSpeed(speed);
         serie.setN_comparison(0);
@@ -38,20 +38,37 @@ public class SerieController {
     
     public void startAlgoritm() throws InterruptedException {
         long start = System.currentTimeMillis();
-        switch (serie.getT_algoritm()){
-            case 1 :
+        switch (serie.getT_algorithm()){
+            case 0 :
                 bubbleSort();
                 long end = System.currentTimeMillis();
                 v_mainModule.loadTextArea(" ");
                 v_mainModule.loadTextArea(" | Tiempo total de ejecucion: "+(end-start)+" ms. | ");
                 break;
+            case 1 :
+                
+                break;
             case 2 :
                 
                 break;
-            case 3 :
-                
-                break;
         }
+    }
+    
+    public int[] readNumbers(String textSerie){
+        if (!textSerie.trim().matches("\\d+(,\\s*\\d+)*")) {
+            javax.swing.JOptionPane.showMessageDialog(null, 
+                "Formato incorrecto. Use: 1,2,3 o 1, 2, 3");
+            return new int[0];
+        }
+        
+        String[] validNums = textSerie.trim().split(",");
+        int[] numbers = new int[validNums.length];
+
+        for (int i = 0; i < validNums.length; i++) {
+            numbers[i] = Integer.parseInt(validNums[i].trim());
+        }
+
+        return numbers;
     }
     
     public String extractText(File textFile){

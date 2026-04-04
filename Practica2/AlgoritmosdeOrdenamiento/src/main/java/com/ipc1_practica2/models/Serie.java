@@ -4,7 +4,7 @@ package com.ipc1_practica2.models;
  */
 public class Serie {
     private int[] numbers;
-    private int t_algoritm;
+    private int t_algorithm;
     private boolean t_order;
     private int speed;
     private int n_comparison;
@@ -14,9 +14,9 @@ public class Serie {
     public Serie() {
     }
 
-    public Serie(int[] numbers, int t_algoritm, boolean t_order, int speed, int n_comparison, int n_exchange, int n_iteration) {
+    public Serie(int[] numbers, int t_algorithm, boolean t_order, int speed, int n_comparison, int n_exchange, int n_iteration) {
         this.numbers = numbers;
-        this.t_algoritm = t_algoritm;
+        this.t_algorithm = t_algorithm;
         this.t_order = t_order;
         this.speed = speed;
         this.n_comparison = n_comparison;
@@ -32,12 +32,12 @@ public class Serie {
         this.numbers = numbers;
     }
 
-    public int getT_algoritm() {
-        return t_algoritm;
+    public int getT_algorithm() {
+        return t_algorithm;
     }
 
-    public void setT_algoritm(int t_algoritm) {
-        this.t_algoritm = t_algoritm;
+    public void setT_algorithm(int t_algoritm) {
+        this.t_algorithm = t_algoritm;
     }
 
     public boolean isT_order() {
