@@ -20,10 +20,12 @@ import javax.swing.JOptionPane;
 public class SerieController {
     private Serie serie;
     private MainModule v_mainModule;
+    private ReportController c_report;
     
     public SerieController(MainModule v_mainModule){
         this.serie = new Serie();
         this.v_mainModule = v_mainModule;
+        this.c_report = new ReportController();
     }
     
     public void loadSerie(int[] numbers, int t_algorithm, boolean t_order, int speed) {
@@ -37,19 +39,33 @@ public class SerieController {
     }
     
     public void startAlgoritm() throws InterruptedException {
-        long start = System.currentTimeMillis();
         switch (serie.getT_algorithm()){
             case 0 :
                 bubbleSort();
-                long end = System.currentTimeMillis();
-                v_mainModule.loadTextArea(" ");
-                v_mainModule.loadTextArea(" | Tiempo total de ejecucion: "+(end-start)+" ms. | ");
                 break;
             case 1 :
-                
+                shellSort();
                 break;
             case 2 :
+                int[] numbers = serie.getNumbers().clone();
+                String serieI = printSerie(numbers);
+                long start = System.nanoTime();
+                v_mainModule.loadTextArea(" INICIANDO QUICK SORT "+ (serie.isT_order() ? "(ASCENDENTE)" : "(DESCENDENTE)"));
                 
+                quickSort(numbers, 0, numbers.length - 1);
+                updateGraph(numbers.clone(), 0, 0, 3);
+                
+                long end = System.nanoTime();
+                long time = (end - start) / 1_000_000;
+                v_mainModule.loadTextArea(" ");
+                v_mainModule.loadTextArea(" | Tiempo total de ejecucion: "+time+" ms. | ");
+                v_mainModule.loadTextArea("-----------------------------------------------------------------------------------------------------------------------------------------------------");
+                v_mainModule.loadTextArea(" ");
+                
+                String order = serie.isT_order()?"Ascendente":"Descendente";
+                String serieF = printSerie(numbers);
+                
+                c_report.generateReport(serieI, serieF, "Quick Sort", order, serie.getN_comparison(), serie.getN_exchange(), serie.getN_iteration(), serie.getSpeed(), time);
                 break;
         }
     }
@@ -115,22 +131,22 @@ public class SerieController {
         }
         return text.toString();
     }
-    // ALGORTMOS
+    // ALGORTMOS ///////////////////////////////////////////////////////////////
     public void bubbleSort() throws InterruptedException{
         int[] numbers = serie.getNumbers();
+        String serieI = printSerie(numbers);
         int n = numbers.length;
-        if(serie.isT_order()){
-            v_mainModule.loadTextArea(" INICIANDO BUBBLE SORT (ASCENDENTE)");
-        } else {
-            v_mainModule.loadTextArea(" INICIANDO BUBBLE SORT (DESCENDENTE)");
-        }
         
+        v_mainModule.loadTextArea(" INICIANDO BUBBLE SORT "+ (serie.isT_order() ? "(ASCENDENTE)" : "(DESCENDENTE)"));
+        
+        long start = System.nanoTime();
         for (int i = 0; i < (n-1); i++) {
             v_mainModule.loadTextArea(" -- Iteracion "+(i+1)+" --");
             serie.setN_iteration(serie.getN_iteration() + 1);
 
             for (int j = 0; j < (n-i-1); j++) {
                 serie.setN_comparison(serie.getN_comparison() + 1);
+                
                 boolean exchange = serie.isT_order() ? numbers[j]>numbers[j + 1] : numbers[j]<numbers[j + 1]; 
                 
                 updateGraph(serie.getNumbers().clone(), j, j+1,1);
@@ -150,7 +166,145 @@ public class SerieController {
                 }
             }
         }
+        long end = System.nanoTime();
+        long time = (end - start) / 1_000_000;
+        v_mainModule.loadTextArea(" ");
+        v_mainModule.loadTextArea(" | Tiempo total de ejecucion: "+time+" ms. | ");
+        v_mainModule.loadTextArea("-----------------------------------------------------------------------------------------------------------------------------------------------------");
+        v_mainModule.loadTextArea(" ");
+        
+        String order = serie.isT_order()?"Ascendente":"Descendente";
+        String serieF = printSerie(numbers);
+        
         updateGraph(serie.getNumbers().clone(), 0, 0,3);
+        c_report.generateReport(serieI, serieF, "Bubble Sort", order, serie.getN_comparison(), serie.getN_exchange(), serie.getN_iteration(), serie.getSpeed(), time);
+    }
+    // //////////////////////////////////////////////////////////////////////
+    public void shellSort() throws InterruptedException {
+        int[] numbers = serie.getNumbers();
+        String serieI = printSerie(numbers);
+        int n = numbers.length;
+
+        v_mainModule.loadTextArea(" INICIANDO SHELL SORT "+ (serie.isT_order() ? "(ASCENDENTE)" : "(DESCENDENTE)"));
+                
+        long start = System.nanoTime();
+        for (int gap = n / 2; gap > 0; gap /= 2) {
+            v_mainModule.loadTextArea(" -- Gap: " + gap + " --");
+            serie.setN_iteration(serie.getN_iteration() + 1);
+
+            for (int i = gap; i < n; i++) {
+                int temp = numbers[i];
+                int j = i;
+
+                serie.setN_comparison(serie.getN_comparison() + 1);
+                updateGraph(numbers.clone(), j, j - gap, 1);
+                Thread.sleep(serie.getSpeed() / 2);
+
+                boolean condicion;
+                if (serie.isT_order()) {
+                    condicion = j >= gap && numbers[j - gap] > temp;
+                } else {
+                    condicion = j >= gap && numbers[j - gap] < temp;
+                }
+
+                while (condicion) {
+                    numbers[j] = numbers[j - gap];
+                    serie.setN_exchange(serie.getN_exchange() + 1);
+                    v_mainModule.loadTextArea(" Intercambiando pos " + j + " y " + (j - gap));
+
+                    updateGraph(numbers.clone(), j, j - gap, 2);
+                    Thread.sleep(serie.getSpeed());
+
+                    j -= gap;
+
+                    if (serie.isT_order()) {
+                        condicion = j >= gap && numbers[j - gap] > temp;
+                    } else {
+                        condicion = j >= gap && numbers[j - gap] < temp;
+                    }
+                    serie.setN_comparison(serie.getN_comparison() + 1);
+                }
+
+                numbers[j] = temp;
+            }
+        }
+        long end = System.nanoTime();
+        long time = (end - start) / 1_000_000;
+        v_mainModule.loadTextArea(" ");
+        v_mainModule.loadTextArea(" | Tiempo total de ejecucion: "+time+" ms. | ");
+        v_mainModule.loadTextArea("-----------------------------------------------------------------------------------------------------------------------------------------------------");
+        v_mainModule.loadTextArea(" ");
+        
+        String order = serie.isT_order()?"Ascendente":"Descendente";
+        String serieF = printSerie(numbers);
+        
+        updateGraph(numbers.clone(), 0, 0, 3);
+        c_report.generateReport(serieI, serieF, "Shell Sort", order, serie.getN_comparison(), serie.getN_exchange(), serie.getN_iteration(), serie.getSpeed(), time);
+    }
+    // ////////////////////////////////////////////////////////////////////////
+    private void quickSort(int[] numbers, int low, int high) throws InterruptedException {
+        if (low < high) {
+            serie.setN_iteration(serie.getN_iteration() + 1);
+            v_mainModule.loadTextArea(" -- Particion [" + low + "] a [" + high + "] --");
+
+            int pi = partition(numbers, low, high);
+            quickSort(numbers, low, pi - 1);
+            quickSort(numbers, pi + 1, high);
+        }
+    }
+
+    private int partition(int[] numbers, int low, int high) throws InterruptedException {
+        int pivot = numbers[high];
+        v_mainModule.loadTextArea(" Pivot: " + pivot);
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            serie.setN_comparison(serie.getN_comparison() + 1);
+
+            updateGraph(numbers.clone(), j, high, 1);
+            Thread.sleep(serie.getSpeed() / 2);
+
+            boolean condicion;
+            if (serie.isT_order()) {
+                condicion = numbers[j] <= pivot;
+            } else {
+                condicion = numbers[j] >= pivot;
+            }
+
+            if (condicion) {
+                i++;
+                int temp = numbers[i];
+                numbers[i] = numbers[j];
+                numbers[j] = temp;
+
+                serie.setN_exchange(serie.getN_exchange() + 1);
+                v_mainModule.loadTextArea(" Intercambiando " + numbers[i] + " y " + numbers[j]);
+
+                updateGraph(numbers.clone(), i, j, 2);
+                Thread.sleep(serie.getSpeed());
+            }
+        }
+
+        int temp = numbers[i + 1];
+        numbers[i + 1] = numbers[high];
+        numbers[high] = temp;
+
+        v_mainModule.loadTextArea(" Pivot " + pivot + " en posicion final [" + (i + 1) + "]");
+        updateGraph(numbers.clone(), i + 1, high, 2);
+        Thread.sleep(serie.getSpeed());
+
+        return i + 1;
+    }
+    
+    public String printSerie(int[] serie){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < serie.length; i++) {
+            sb.append(serie[i]);
+            if (i < serie.length - 1) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();   
     }
     
     public void updateGraph(int[] numbers, int n1, int n2, int action){
@@ -181,14 +335,14 @@ public class SerieController {
         }
         
         JFreeChart chart = ChartFactory.createBarChart(
-            "",                        // título
-            "",                        // eje X label
-            "",                        // eje Y label
+            "",           
+            "",                        
+            "",                        
             dataset,
             PlotOrientation.VERTICAL,
-            false,                     // leyenda
-            false,                     // tooltips
-            false                      // URLs
+            false,                     
+            false,                 
+            false                 
         );
         
         chart.setBackgroundPaint(null);

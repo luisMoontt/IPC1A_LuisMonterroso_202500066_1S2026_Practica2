@@ -149,11 +149,20 @@ public class StartFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+        try {
+            java.io.File file = new java.io.File("reporte.html");
+            java.awt.Desktop.getDesktop().browse(file.toURI());
+        } catch (java.io.IOException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "No se pudo abrir el reporte", 
+                "Error", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+        InformationModule ventana = new InformationModule();
+        ventana.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

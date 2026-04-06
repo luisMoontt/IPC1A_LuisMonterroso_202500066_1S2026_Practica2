@@ -522,7 +522,20 @@ public class MainModule extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         //int[] data = {90, 34, 25, 1, 22, 11, 90, 45, 8, 9};
+        if (jTextField1.getText().trim().isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "El campo no puede estar vacío", 
+                "Error", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         int[] numbers = c_serie.readNumbers(jTextField1.getText());
+        
+        if (numbers.length<1){
+            return;
+        }
+        
         int algorithm = jComboBox2.getSelectedIndex();
         int s_speed = jComboBox4.getSelectedIndex();
         int s_order = jComboBox3.getSelectedIndex();
